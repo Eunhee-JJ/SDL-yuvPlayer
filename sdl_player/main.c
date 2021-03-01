@@ -14,6 +14,9 @@ SDL_Texture *texture;
 
 FILE *fp;
 
+unsigned int startTime = 0, endTime;
+int fps;
+
 int refresh_video(void *opaque)
 {
     while(thread_exit == 0)
@@ -69,6 +72,7 @@ void SDLclose()
     //Quit SDL subsystems
     SDL_Quit();
 }
+
  
 int main(int argc, char* args[])
 {
@@ -84,8 +88,9 @@ int main(int argc, char* args[])
             printf( "Failed to load media!\n" );
         }
         else{
-            //Main loop flag
+            // Main loop flag
             bool quit = false;
+            // Controlling video play flag
             bool play = true;
             
             SDL_Thread *thread = SDL_CreateThread(refresh_video, NULL, NULL);
@@ -95,40 +100,63 @@ int main(int argc, char* args[])
             // The width and height of the image
             const int IMG_W = 1280;
             const int IMG_H = 720;
+            const int IMG_F = 30;
+            int nowFrame = 0;
             
             // buffer size for YUV420
             uint8_t buff[IMG_W * IMG_H * 3 / 2];
+            memset(buff, 0, IMG_W * IMG_H * 3 / 2);
             
             while( !quit )
             {
+                startTime = 0;
                 while( SDL_PollEvent( &event ) != 0 )
                 {
                     if( event.type == SDL_QUIT )
                     {
                         quit = true;
                     }
-                    else if(event.type == SDL_WINDOWEVENT)
+                    else if( event.type == SDL_WINDOWEVENT )
                     {
                         SDL_GetWindowSize(window, &WINDOW_W, &WINDOW_H);
                         printf("window resize, w=%d h=%d\n", WINDOW_W, WINDOW_H);
                     }
+                    /*
+                    else if( evnet.type ==  SDLK_SPACE ){
+                        play = !play;
+                        
+                    }
+                     */
+                    else if(nowFrame < 30){
+                        // loop for reading frames & update render
+                        fread(buff, 1, IMG_W * IMG_H * 3 / 2, fp);
+                        nowFrame++;
+                        //printf( "Now frame: %d\n", nowFrame );
+                        SDL_UpdateTexture(texture, NULL, buff, IMG_W);
+             
+                        rect.x = 0;
+                        rect.y = 0;
+                        rect.w = WINDOW_W;
+                        rect.h = WINDOW_H;
+             
+                        SDL_RenderClear(renderer);
+                        SDL_RenderCopy(renderer, texture, NULL, &rect);
+                        SDL_RenderPresent(renderer);
+                        
+                        //SDL_Delay(40);
+                        if(nowFrame == IMG_F){
+                            endTime = SDL_GetTicks();
+                            fps = (endTime - startTime) / IMG_F;
+                            printf( "프레임 당 소요시간 : %dms\n", fps);
+                            printf( "총 소요시간: %dms\n", endTime - startTime );
+                        }
+                    }
                 }
                 
-                // loop for reading frames & update render
-                fread(buff, 1, IMG_W * IMG_H * 3 / 2, fp);
-                SDL_UpdateTexture(texture, NULL, buff, IMG_W);
-     
-                rect.x = 0;
-                rect.y = 0;
-                rect.w = WINDOW_W;
-                rect.h = WINDOW_H;
-     
-                SDL_RenderClear(renderer);
-                SDL_RenderCopy(renderer, texture, NULL, &rect);
-                SDL_RenderPresent(renderer);
                 
-                SDL_Delay(40);
             }
+            
+            
         }
     }
     SDLclose();
