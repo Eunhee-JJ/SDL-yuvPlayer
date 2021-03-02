@@ -14,7 +14,7 @@ SDL_Texture *texture;
 
 FILE *fp;
 
-unsigned int startTime = 0, endTime;
+unsigned int startTime = 0, endTime, restartTime = 0;
 int fps;
 
 int refresh_video(void *opaque)
@@ -102,11 +102,13 @@ int main(int argc, char* args[])
             const int IMG_H = 720;
             const int IMG_F = 30;
             int nowFrame = 0;
+            int nFrame = 0;
             
             // buffer size for YUV420
             uint8_t buff[IMG_W * IMG_H * 3 / 2];
             memset(buff, 0, IMG_W * IMG_H * 3 / 2);
             
+            // Main loop
             while( !quit )
             {
                 startTime = 0;
@@ -121,16 +123,23 @@ int main(int argc, char* args[])
                         SDL_GetWindowSize(window, &WINDOW_W, &WINDOW_H);
                         printf("window resize, w=%d h=%d\n", WINDOW_W, WINDOW_H);
                     }
-                    /*
-                    else if( evnet.type ==  SDLK_SPACE ){
+                    else if( event.key.keysym.sym ==  SDLK_SPACE ){
                         play = !play;
-                        
+                        if( play == true ){
+                            if( nowFrame == IMG_F ){
+                                rewind( fp );
+                                printf(" rewind \n");
+                                nowFrame = 0;
+                            }
+                            restartTime = SDL_GetTicks();
+                            nFrame = 0;
+                        }
                     }
-                     */
-                    else if(nowFrame < 30){
+                    else if( play == true && nowFrame < IMG_F ){
                         // loop for reading frames & update render
                         fread(buff, 1, IMG_W * IMG_H * 3 / 2, fp);
                         nowFrame++;
+                        nFrame++;
                         //printf( "Now frame: %d\n", nowFrame );
                         SDL_UpdateTexture(texture, NULL, buff, IMG_W);
              
@@ -146,17 +155,16 @@ int main(int argc, char* args[])
                         //SDL_Delay(40);
                         if(nowFrame == IMG_F){
                             endTime = SDL_GetTicks();
-                            fps = (endTime - startTime) / IMG_F;
+                            fps = (endTime - restartTime) / nFrame;
+                            printf( "재생 완료. \n" );
                             printf( "프레임 당 소요시간 : %dms\n", fps);
-                            printf( "총 소요시간: %dms\n", endTime - startTime );
+                            printf( "총 소요시간: %dms\n", endTime - restartTime );
+                            play = !play;
+                            printf( "play: %d", play );
                         }
                     }
                 }
-                
-                
             }
-            
-            
         }
     }
     SDLclose();
