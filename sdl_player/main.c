@@ -148,25 +148,31 @@ int main(int argc, char* args[])
                     {
                         quit = true;
                     }
-                    else if( event.key.keysym.sym == SDLK_SPACE ){
-                        play = !play;
-                        if( play == true ){
-                            if( nowFrame == IMG_F ){
-                                printf(" rewind \n");
-                                rewind( fp );
-                                nowFrame = 0;
+                    else if( event.type == SDL_KEYDOWN){
+                        if( event.key.keysym.sym == SDLK_SPACE ){
+                            play = !play;
+                            printResult();
+                            if( play == true ){
+                                printf("Play\n");
+                                if( nowFrame == IMG_F ){
+                                    printf(" Rewind \n");
+                                    rewind( fp );
+                                    nowFrame = 0;
+                                }
+                                nFrame = 0;
                             }
-                            nFrame = 0;
+                            else if( play == false ){
+                                printf("Pause\n");
+                            }
                         }
-                    }
-                    else if( event.key.keysym.sym == SDLK_LEFT ){
-                        //fseek()
-                        printf("Previous Frame\n");
-                        nowFrame--;
-                        nFrame = 1;
-                        fseek(fp, IMG_W * IMG_H * 3 / 2 ,SEEK_CUR);
-                        displayFrame(&rect);
-                        printResult();
+                        else if( event.key.keysym.sym == SDLK_LEFT ){
+                            printf("Previous Frame\n");
+                            nowFrame--;
+                            nFrame = 1;
+                            fseek(fp, IMG_W * IMG_H * 3 / 2 ,SEEK_CUR);
+                            displayFrame(&rect);
+                            printResult();
+                        }
                     }
                     if( play == true && nowFrame < IMG_F ){
                         displayFrame(&rect);
