@@ -5,42 +5,31 @@
 // Display window size
 int WINDOW_W = 1280;
 int WINDOW_H = 720;
- 
-int thread_exit = 0;
 
 SDL_Window *window;
 SDL_Renderer *renderer;
 SDL_Texture *texture;
 
+// YUV video file
 FILE *fp;
 
+// For counting the time required
 unsigned int startTime, endTime, FTime;
+int nowFrame = 0;
+int nFrame = 0;
 
 // The width and height of the image
 const int IMG_W = 1280;
 const int IMG_H = 720;
 const int IMG_F = 30;
-int nowFrame = 0;
-int nFrame = 0;
 
-// buffer size for YUV420
+// Buffer for YUV420
 uint8_t buff[IMG_W * IMG_H * 3 / 2];
 
+// Flag for play/pause
 bool play = true;
-/*
-int refresh_video(void *opaque)
-{
-    while(thread_exit == 0)
-    {
-        SDL_Event event;
-        event.type = SDL_USEREVENT + 1;
-        SDL_PushEvent(&event);
-        SDL_Delay(40);
-    }
-    printf("exit refresh video thread.\n");
-    return 0;
-}
-*/
+
+// SDL init
 bool init()
 {
     bool success = true;
@@ -60,6 +49,7 @@ bool init()
     return success;
 }
 
+// Load YUV file
 bool loadMedia()
 {
     bool success = true;
@@ -74,14 +64,13 @@ bool loadMedia()
     return success;
 }
 
+// Display a frame
 void displayFrame(SDL_Rect *rect)
 {
-    // loop for reading frames & update render
-    startTime = SDL_GetTicks();
+    startTime = SDL_GetTicks(); // YUV2RGB start point
     fread(buff, 1, IMG_W * IMG_H * 3 / 2, fp);
     nowFrame++;
     nFrame++;
-    //printf( "Now frame: %d\n", nowFrame );
     SDL_UpdateTexture(texture, NULL, buff, IMG_W);
 
     rect->x = 0;
@@ -93,10 +82,12 @@ void displayFrame(SDL_Rect *rect)
     SDL_RenderCopy(renderer, texture, NULL, rect);
     SDL_RenderPresent(renderer);
     
-    endTime = SDL_GetTicks();
-    FTime = endTime - startTime;
+    printf("%d frame\n", nowFrame);
+    endTime = SDL_GetTicks(); // YUV2RGB end point
+    FTime = endTime - startTime; // Time taken per frame
 }
 
+// Print result for a play
 void printResult()
 {
     printf( "재생 완료. \n" );
@@ -117,6 +108,7 @@ void SDLclose()
 
 int main(int argc, char* args[])
 {
+    // SDL init
     if( !init() )
     {
         printf("Failed to initialize!\n");
@@ -129,11 +121,8 @@ int main(int argc, char* args[])
             printf( "Failed to load media!\n" );
         }
         else{
-            // Main loop flag
-            bool quit = false;
-            // Controlling video play flag
+            bool quit = false; // Main loop flag
             
-            //SDL_Thread *thread = SDL_CreateThread(refresh_video, NULL, NULL);
             SDL_Event event;
             SDL_Rect rect;
             
@@ -142,34 +131,51 @@ int main(int argc, char* args[])
             // Main loop
             while( !quit )
             {
+                // Event handling
                 while( SDL_PollEvent( &event ) != 0 )
                 {
+                    // Event - quit
                     if( event.type == SDL_QUIT )
                     {
                         quit = true;
                     }
+                    // Event - keydown
                     else if( event.type == SDL_KEYDOWN){
+                        // Play & Pause
                         if( event.key.keysym.sym == SDLK_SPACE ){
                             play = !play;
                             printResult();
+                            // Play
                             if( play == true ){
                                 printf("Play\n");
+                                // Play from the first frame at the end of the file
                                 if( nowFrame == IMG_F ){
                                     printf(" Rewind \n");
                                     rewind( fp );
                                     nowFrame = 0;
                                 }
                                 nFrame = 0;
+                            // Pause
                             }
                             else if( play == false ){
                                 printf("Pause\n");
                             }
                         }
+                        // Move to previous frame
                         else if( event.key.keysym.sym == SDLK_LEFT ){
                             printf("Previous Frame\n");
                             nowFrame--;
                             nFrame = 1;
-                            fseek(fp, IMG_W * IMG_H * 3 / 2 ,SEEK_CUR);
+                            fseek(fp, -(IMG_W * IMG_H * 3 / 2) * 2 ,SEEK_CUR);
+                            displayFrame(&rect);
+                            printResult();
+                        }
+                        // Move to next frame
+                        else if( event.key.keysym.sym == SDLK_RIGHT ){
+                            printf("Previous Frame\n");
+                            nowFrame++;
+                            nFrame = 1;
+                            fseek(fp, 1 ,SEEK_CUR);
                             displayFrame(&rect);
                             printResult();
                         }
