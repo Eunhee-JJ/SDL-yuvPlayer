@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		37DF5EA125EA204400FE0785 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 37DF5EA025EA204400FE0785 /* main.c */; };
-		37DF5EAE25EA234900FE0785 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37DF5EA925EA207000FE0785 /* SDL2.framework */; };
+		37A93D3025ECAC640067D774 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A93D2F25ECAC640067D774 /* SDL2.framework */; };
+		37A93D3F25ECB8F30067D774 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 37A93D3825ECB7DB0067D774 /* main.c */; };
+		37A93D4125ECB8F60067D774 /* PeopleOnStreet_1280x720_30_Original.yuv in Sources */ = {isa = PBXBuildFile; fileRef = 37A93D3525ECB7DB0067D774 /* PeopleOnStreet_1280x720_30_Original.yuv */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -24,9 +25,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		37A93D2F25ECAC640067D774 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
+		37A93D3525ECB7DB0067D774 /* PeopleOnStreet_1280x720_30_Original.yuv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PeopleOnStreet_1280x720_30_Original.yuv; sourceTree = "<group>"; };
+		37A93D3625ECB7DB0067D774 /* .Makefile.swp */ = {isa = PBXFileReference; lastKnownFileType = file; path = .Makefile.swp; sourceTree = "<group>"; };
+		37A93D3725ECB7DB0067D774 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		37A93D3825ECB7DB0067D774 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		37A93D3925ECB7DB0067D774 /* play */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = play; sourceTree = "<group>"; };
 		37DF5E9D25EA204400FE0785 /* sdl_player */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sdl_player; sourceTree = BUILT_PRODUCTS_DIR; };
-		37DF5EA025EA204400FE0785 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
-		37DF5EA925EA207000FE0785 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,17 +39,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				37DF5EAE25EA234900FE0785 /* SDL2.framework in Frameworks */,
+				37A93D3025ECAC640067D774 /* SDL2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		37A93D3425ECB7DB0067D774 /* sdl_player */ = {
+			isa = PBXGroup;
+			children = (
+				37A93D3525ECB7DB0067D774 /* PeopleOnStreet_1280x720_30_Original.yuv */,
+				37A93D3625ECB7DB0067D774 /* .Makefile.swp */,
+				37A93D3725ECB7DB0067D774 /* Makefile */,
+				37A93D3825ECB7DB0067D774 /* main.c */,
+				37A93D3925ECB7DB0067D774 /* play */,
+			);
+			path = sdl_player;
+			sourceTree = "<group>";
+		};
 		37DF5E9425EA204400FE0785 = {
 			isa = PBXGroup;
 			children = (
-				37DF5E9F25EA204400FE0785 /* sdl_player */,
+				37A93D3425ECB7DB0067D774 /* sdl_player */,
 				37DF5E9E25EA204400FE0785 /* Products */,
 				37DF5EA825EA206F00FE0785 /* Frameworks */,
 			);
@@ -58,18 +75,10 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		37DF5E9F25EA204400FE0785 /* sdl_player */ = {
-			isa = PBXGroup;
-			children = (
-				37DF5EA025EA204400FE0785 /* main.c */,
-			);
-			path = sdl_player;
-			sourceTree = "<group>";
-		};
 		37DF5EA825EA206F00FE0785 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				37DF5EA925EA207000FE0785 /* SDL2.framework */,
+				37A93D2F25ECAC640067D774 /* SDL2.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -130,7 +139,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				37DF5EA125EA204400FE0785 /* main.c in Sources */,
+				37A93D4125ECB8F60067D774 /* PeopleOnStreet_1280x720_30_Original.yuv in Sources */,
+				37A93D3F25ECB8F30067D774 /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,6 +266,12 @@
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
+				HEADER_SEARCH_PATHS = sdl_player/ffmpeg/include;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/sdl_player/ffmpeg/4.3.2/lib",
+					"$(PROJECT_DIR)/sdl_player/ffmpeg/lib",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -267,6 +283,12 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = sdl_player/ffmpeg/include;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/sdl_player/ffmpeg/4.3.2/lib",
+					"$(PROJECT_DIR)/sdl_player/ffmpeg/lib",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
