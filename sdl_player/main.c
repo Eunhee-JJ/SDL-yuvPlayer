@@ -69,8 +69,10 @@ void displayFrame(SDL_Rect *rect)
 {
     startTime = SDL_GetTicks(); // YUV2RGB start point
     fread(buff, 1, IMG_W * IMG_H * 3 / 2, fp);
-    nowFrame++;
-    nFrame++;
+    if( nowFrame < 30 && nFrame < 30 ){
+        nowFrame++;
+        nFrame++;
+    }
     SDL_UpdateTexture(texture, NULL, buff, IMG_W);
 
     rect->x = 0;
@@ -93,7 +95,6 @@ void printResult()
     printf( "재생 완료. \n" );
     printf( "프레임 당 소요시간 : %dms\n", FTime);
     printf( "총 소요시간: %dms\n", FTime * nFrame );
-    printf( "play: %d\n", play );
 }
 
 void SDLclose()
@@ -164,7 +165,7 @@ int main(int argc, char* args[])
                         // Move to previous frame
                         else if( event.key.keysym.sym == SDLK_LEFT ){
                             printf("Previous Frame\n");
-                            nowFrame--;
+                            nowFrame = nowFrame - 2;
                             nFrame = 1;
                             fseek(fp, -(IMG_W * IMG_H * 3 / 2) * 2 ,SEEK_CUR);
                             displayFrame(&rect);
@@ -172,18 +173,18 @@ int main(int argc, char* args[])
                         }
                         // Move to next frame
                         else if( event.key.keysym.sym == SDLK_RIGHT ){
-                            printf("Previous Frame\n");
-                            nowFrame++;
+                            printf("Next Frame\n");
                             nFrame = 1;
                             fseek(fp, 1 ,SEEK_CUR);
                             displayFrame(&rect);
                             printResult();
                         }
                     }
+                    // Display until the end of the file
                     if( play == true && nowFrame < IMG_F ){
                         displayFrame(&rect);
                         
-                        // Stop playing at the end of file
+                        // Stop playing at the end of the file
                         if(nowFrame == IMG_F){
                             play = !play;
                             printResult();
