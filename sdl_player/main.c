@@ -14,7 +14,7 @@ SDL_Texture *texture;
 FILE *fp;
 
 // For counting the time required
-unsigned int startTime, endTime, FTime;
+unsigned int startTime, endTime, FTime, sumFTime = 0;
 int nowFrame = 0;
 int nFrame = 0;
 
@@ -86,14 +86,16 @@ void displayFrame(SDL_Rect *rect)
     printf("%d frame\n", nowFrame);
     endTime = SDL_GetTicks(); // YUV2RGB end point
     FTime = endTime - startTime; // Time taken per frame
+    sumFTime += FTime;
+    printf( "프레임 당 소요시간 : %dms\n", FTime);
 }
 
 // Print result for a play
 void printResult()
 {
     printf( "재생 완료. \n" );
-    printf( "프레임 당 소요시간 : %dms\n", FTime);
-    printf( "총 소요시간: %dms\n", FTime * nFrame );
+    printf( "프레임 당 평균 소요시간: %fms\n", (float)sumFTime / nFrame );
+    printf( "총 소요시간: %dms\n", sumFTime * nFrame );
 }
 
 void SDLclose()
@@ -155,6 +157,7 @@ int main(int argc, char* args[])
                                     nowFrame = 0;
                                 }
                                 nFrame = 0;
+                                sumFTime = 0;
                             // Pause
                             }
                             else if( play == false ){
@@ -169,10 +172,11 @@ int main(int argc, char* args[])
                             }
                             else
                             {
+                                sumFTime = 0;
                                 printf("Previous Frame\n");
                                 nowFrame = nowFrame - 2;
                                 nFrame = 1;
-                                fseek(fp, -(IMG_W * IMG_H * 3 / 2) * 2 ,SEEK_CUR);
+                                fseek(fp, -(IMG_W * IMG_H * 3 / 2 * 2 - 1) ,SEEK_CUR);
                                 displayFrame(&rect);
                                 printResult();
                             }
@@ -185,6 +189,7 @@ int main(int argc, char* args[])
                                 printf("Last Frame.\n");
                             }
                             else{
+                                sumFTime = 0;
                                 printf("Next Frame\n");
                                 nFrame = 1;
                                 fseek(fp, 1 ,SEEK_CUR);
@@ -202,6 +207,7 @@ int main(int argc, char* args[])
                         if(nowFrame == IMG_F){
                             play = !play;
                             printResult();
+                            sumFTime = 0;
                         }
                     }
                 }
