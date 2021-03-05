@@ -69,10 +69,9 @@ void displayFrame(SDL_Rect *rect)
 {
     startTime = SDL_GetTicks(); // YUV2RGB start point
     fread(buff, 1, IMG_W * IMG_H * 3 / 2, fp);
-    if( nowFrame < 30 && nFrame < 30 ){
-        nowFrame++;
-        nFrame++;
-    }
+    nowFrame++;
+    nFrame++;
+
     SDL_UpdateTexture(texture, NULL, buff, IMG_W);
 
     rect->x = 0;
@@ -164,25 +163,40 @@ int main(int argc, char* args[])
                         }
                         // Move to previous frame
                         else if( event.key.keysym.sym == SDLK_LEFT ){
-                            printf("Previous Frame\n");
-                            nowFrame = nowFrame - 2;
-                            nFrame = 1;
-                            fseek(fp, -(IMG_W * IMG_H * 3 / 2) * 2 ,SEEK_CUR);
-                            displayFrame(&rect);
-                            printResult();
+                            if(nowFrame <= 1)
+                            {
+                                printf("First frame.\n");
+                            }
+                            else
+                            {
+                                printf("Previous Frame\n");
+                                nowFrame = nowFrame - 2;
+                                nFrame = 1;
+                                fseek(fp, -(IMG_W * IMG_H * 3 / 2) * 2 ,SEEK_CUR);
+                                displayFrame(&rect);
+                                printResult();
+                            }
+                            
                         }
                         // Move to next frame
                         else if( event.key.keysym.sym == SDLK_RIGHT ){
-                            printf("Next Frame\n");
-                            nFrame = 1;
-                            fseek(fp, 1 ,SEEK_CUR);
-                            displayFrame(&rect);
-                            printResult();
+                            if( nowFrame >= 30)
+                            {
+                                printf("Last Frame.\n");
+                            }
+                            else{
+                                printf("Next Frame\n");
+                                nFrame = 1;
+                                fseek(fp, 1 ,SEEK_CUR);
+                                displayFrame(&rect);
+                                printResult();
+                            }
                         }
                     }
                     // Display until the end of the file
                     if( play == true && nowFrame < IMG_F ){
                         displayFrame(&rect);
+                        SDL_Delay(10);
                         
                         // Stop playing at the end of the file
                         if(nowFrame == IMG_F){
