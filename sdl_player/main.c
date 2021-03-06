@@ -87,7 +87,7 @@ void displayFrame(SDL_Rect *rect)
     endTime = SDL_GetTicks(); // YUV2RGB end point
     FTime = endTime - startTime; // Time taken per frame
     sumFTime += FTime;
-    printf( "프레임 당 소요시간 : %dms\n", FTime);
+    printf( "프레임 당 소요시간 : %dms\n", FTime );
 }
 
 // Print result for a play
@@ -175,7 +175,7 @@ int main(int argc, char* args[])
                                 sumFTime = 0;
                                 printf("Previous Frame\n");
                                 nowFrame = nowFrame - 2;
-                                nFrame = 1;
+                                nFrame = 0;
                                 fseek(fp, -(IMG_W * IMG_H * 3 / 2 * 2) ,SEEK_CUR);
                                 displayFrame(&rect);
                                 printResult();
@@ -191,7 +191,7 @@ int main(int argc, char* args[])
                             else{
                                 sumFTime = 0;
                                 printf("Next Frame\n");
-                                nFrame = 1;
+                                nFrame = 0;
                                 fseek(fp, 1 ,SEEK_CUR);
                                 displayFrame(&rect);
                                 printResult();
