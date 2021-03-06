@@ -95,7 +95,7 @@ void printResult()
 {
     printf( "재생 완료. \n" );
     printf( "프레임 당 평균 소요시간: %fms\n", (float)sumFTime / nFrame );
-    printf( "총 소요시간: %dms\n", sumFTime * nFrame );
+    printf( "총 소요시간: %dms\n", sumFTime );
 }
 
 void SDLclose()
@@ -178,7 +178,6 @@ int main(int argc, char* args[])
                                 nFrame = 0;
                                 fseek(fp, -(IMG_W * IMG_H * 3 / 2 * 2) ,SEEK_CUR);
                                 displayFrame(&rect);
-                                printResult();
                             }
                             
                         }
@@ -192,9 +191,7 @@ int main(int argc, char* args[])
                                 sumFTime = 0;
                                 printf("Next Frame\n");
                                 nFrame = 0;
-                                fseek(fp, 1 ,SEEK_CUR);
                                 displayFrame(&rect);
-                                printResult();
                             }
                         }
                     }
