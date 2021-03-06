@@ -176,7 +176,7 @@ int main(int argc, char* args[])
                                 printf("Previous Frame\n");
                                 nowFrame = nowFrame - 2;
                                 nFrame = 1;
-                                fseek(fp, -(IMG_W * IMG_H * 3 / 2 * 2 - 1) ,SEEK_CUR);
+                                fseek(fp, -(IMG_W * IMG_H * 3 / 2 * 2) ,SEEK_CUR);
                                 displayFrame(&rect);
                                 printResult();
                             }
@@ -198,19 +198,20 @@ int main(int argc, char* args[])
                             }
                         }
                     }
+                }
                     // Display until the end of the file
-                    if( play == true && nowFrame < IMG_F ){
-                        displayFrame(&rect);
-                        SDL_Delay(10);
-                        
-                        // Stop playing at the end of the file
-                        if(nowFrame == IMG_F){
-                            play = !play;
-                            printResult();
-                            sumFTime = 0;
-                        }
+                if( play == true && nowFrame < IMG_F ){
+                    displayFrame(&rect);
+                    SDL_Delay(10);
+                    
+                    // Stop playing at the end of the file
+                    if(nowFrame == IMG_F){
+                        play = !play;
+                        printResult();
+                        sumFTime = 0;
                     }
                 }
+                
             }
         }
     }
